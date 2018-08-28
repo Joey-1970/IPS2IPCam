@@ -16,7 +16,7 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 		
- 	    	//$this->ConnectParent("{ED89906D-5B78-4D47-AB62-0BDCEB9AD330}");
+ 	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
 		 //Status-Variablen anlegen
 	        
