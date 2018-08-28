@@ -86,7 +86,7 @@
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 						
 			If (($Result == true) AND ($this->ReadPropertyBoolean("Open") == true)) {
-				
+				$this->SetStreamData();
 				$this->SetStatus(102);
 			}
 			else {
@@ -107,7 +107,12 @@
 	 	
  	}
 	// Beginn der Funktionen
-	
+	public function SetStreamData()
+	{
+		//<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >
+		$String = '<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >';
+		SetValueString($this->GetIDForIdent("Stream"), $String);
+	}
 	
 	    
 	private function GetParentID()
