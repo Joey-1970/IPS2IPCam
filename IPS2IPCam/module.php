@@ -24,7 +24,7 @@
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
 		 // Statusvariablen anlegen
-		$this->RegisterVariableString("Stream", "Video-Stream", "", 10);
+		$this->RegisterVariableString("Stream", "Video-Stream", "~HTMLBox", 10);
 		
         }
        	
