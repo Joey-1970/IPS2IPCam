@@ -16,14 +16,16 @@
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyString("IPAddress", "127.0.0.1");
-	    	$this->RegisterPropertyString("User", "User");
+	    	$this->RegisterPropertyInteger("Port", 80);
+		$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
-		$this->RegisterPropertyInteger("Port", 0);
+		$this->RegisterPropertyInteger("ServerSocketPort", 0);
 		
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
-		 //Status-Variablen anlegen
-	        
+		 // Statusvariablen anlegen
+		$this->RegisterVariableString("Stream", "Video-Stream", "", 10);
+		
         }
        	
 	public function GetConfigurationForm() { 
@@ -36,12 +38,13 @@
 		$arrayElements = array(); 
 		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddress", "caption" => "IP");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Port", "caption" => "Port:");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
 		
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Port", "caption" => "Port:");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ServerSocketPort", "caption" => "Port:");
  		
  		
 		
@@ -60,8 +63,8 @@
 		$this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
 
 		If ($ParentID > 0) {
-			If (IPS_GetProperty($ParentID, 'Port') <> $this->ReadPropertyInteger("Port")) {
-				IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger("Port"));
+			If (IPS_GetProperty($ParentID, 'Port') <> $this->ReadPropertyInteger("ServerSocketPort")) {
+				IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger("ServerSocketPort"));
 			}
 			If (IPS_GetProperty($ParentID, 'Open') <> $this->ReadPropertyBoolean("Open")) {
 				IPS_SetProperty($ParentID, 'Open', $this->ReadPropertyBoolean("Open"));
