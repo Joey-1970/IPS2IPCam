@@ -139,5 +139,97 @@
 		}
         return false;
     	}  
+	    
+/*
+//*************************************************************************************************************
+// Diese Funktion liest den Parameterstatus aus einer IP-Cam aus
+function IP_Cam_Parameterstatus($ip, $user, $passwort, $port)
+{
+// Befehlsaufruf erstellen
+$Befehl = "http://".$ip.":".$port."/get_params.cgi?"."user=".$user."&pwd=".$passwort;
+// Kamera Auslesen
+$handle = fopen($Befehl,"r"); // String öffnen
+$parameter = "";
+$parameter = stream_get_contents($handle); // String einlesen
+//echo $parameter;
+$parameterstatus = array();
+$parameterstatus = explode(";",$parameter);
+
+// Bewegungsmelder Sensibilität auslesen
+$BewegungsmelderSensibilitaet = 10 - (intval(substr($parameterstatus[150], -1, 1)));
+
+// Bewegungsmelder Aktivierung auslesen
+If ((intval(substr($parameterstatus[149], -1, 1)))== 1)
+	{
+	$BewegungsmelderStatus = true;
+	}
+elseif ((intval(substr($parameterstatus[149], -1, 1)))== 0)
+	{
+	$BewegungsmelderStatus = false;
+	}
+
+// Mailversand Aktivierung auslesen
+If ((intval(substr($parameterstatus[159], -1, 1)))== 1)
+	{
+	$MailversandStatus = true;
+	}
+elseif ((intval(substr($parameterstatus[159], -1, 1)))== 0)
+	{
+	$MailversandStatus = false;
+	}
+
+return array($BewegungsmelderSensibilitaet, $BewegungsmelderStatus, $MailversandStatus);
+}
+
+//*************************************************************************************************************
+// Diese Funktion prüft ob der Bewegungsmelder ausgelöst wurde
+function IP_Cam_BewegungsmelderAusloesung($ip, $user, $passwort, $port)
+{
+// Befehlsaufruf erstellen http://192.168.178.11:80/get_status.cgi?.user=admin&pwd=Dennis1999
+$Befehl = "http://".$ip.":".$port."/get_status.cgi?"."user=".$user."&pwd=".$passwort;
+// Kamera Auslesen
+$handle = fopen($Befehl,"r"); // String öffnen
+$Status = "";
+$Status = stream_get_contents($handle); // String einlesen
+//echo $Status;
+$Alarmstatus = array();
+$Alarmstatus = explode(";",$Status);
+
+if (intval(substr($Alarmstatus[6], -1, 1)) == 1)
+  {
+  $BewegungsmelderAusloesung = true;
+  }
+  else
+  {
+  $BewegungsmelderAusloesung = false;
+  }
+
+return $BewegungsmelderAusloesung;
+}
+
+//*************************************************************************************************************
+// Diese Funktion setzt verschiedene Parameter der IP-Cam
+function IP_Cam_Parameter($ip, $user, $passwort, $port, $BewegungsmelderSensibilitaet, $BewegungsmelderStatus, $MailversandStatus)
+{
+$BewegungsmelderSensibilitaet = 10 - $BewegungsmelderSensibilitaet;
+$BewegungsmelderStatusInt = (int)$BewegungsmelderStatus;
+$MailversandStatusInt = (int)$MailversandStatus;
+
+file_get_contents("http://$ip:$port/set_alarm.cgi?motion_armed=$BewegungsmelderStatusInt&mail=$MailversandStatusInt&motion_sensitivity=$BewegungsmelderSensibilitaet&motion_compensation=1&user=$user&pwd=$passwort");
+
+return;
+}
+
+//*************************************************************************************************************
+// Diese Funktion steuert die Bewegung der IP-Cam
+// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
+function IP_Cam_Steuerung($ip, $user, $passwort, $port, $Bewegung)
+{
+$Bewegungsarray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
+file_get_contents("http://$ip:$port/decoder_control.cgi?command=$Bewegungsarray[$Bewegung]&onestep=1&user=$user&pwd=$passwort");
+return;
+}   
+*/
+
 }
 ?>
