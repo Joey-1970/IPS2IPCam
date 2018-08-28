@@ -1,0 +1,14 @@
+{
+  "id": "{13172616-DE05-498B-924D-554919F2D4AF}",
+  "name": "IPS2IPCam",
+  "type": 3,
+  "vendor": "JP-IPS-Modules",
+  "aliases":
+  [
+    "IPS2IPCam"
+  ],
+  "parentRequirements": ["{79827379-F36E-4ADA-8A95-5F8D1DC92FA9}"],
+  "childRequirements": [],
+  "implemented": ["{018EF6B5-AB94-40C6-AA53-46943E824ACF}"],
+  "prefix": "IPS2IPCam"
+}
