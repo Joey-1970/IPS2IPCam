@@ -158,39 +158,51 @@
 			$Password = $this->ReadPropertyString("Password");
 
 			$Lines = array();
-			$lines = file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
+			$Lines = file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
 
-			for ($i = 0; $i <= (count($lines) - 1); $i++) {
-				$teile = explode("=", $lines[$i]);
+			for ($i = 0; $i <= (count($Lines) - 1); $i++) {
+				$Parts = explode("=", $Lines[$i]);
 
-				If ($teile[0] == "var alarm_motion_sensitivity") {
-					If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($teile[1])) {
-						SetValueInteger($this->GetIDForIdent("MotionSensibility"), intval($teile[1]));
+				If ($Parts[0] == "var alarm_motion_sensitivity") {
+					If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($Parts[1])) {
+						SetValueInteger($this->GetIDForIdent("MotionSensibility"), intval($Parts[1]));
 					}
 				}
-				If ($teile[0] == "var alarm_motion_armed") {
-					If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($teile[1])) {
-						SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($teile[1]));
+				If ($Parts[0] == "var alarm_motion_armed") {
+					If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($Parts[1])) {
+						SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($Parts[1]));
 					}
 				}
-				If ($teile[0] == "var alarm_mail") {
-					If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($teile[1])) {
-						SetValueBoolean($this->GetIDForIdent("Notification"), intval($teile[1]));
+				If ($Parts[0] == "var alarm_mail") {
+					If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($Parts[1])) {
+						SetValueBoolean($this->GetIDForIdent("Notification"), intval($Parts[1]));
 					}
 				}
 			}
+			$this->GetAlarmState();
 		}
 	}
 	    
-	public function GetAlarmState();
+	public function GetAlarmState()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddress");
 			$Port = $this->ReadPropertyInteger("Port");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
+			
 			$Lines = array();
-			$lines = file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
+			$Lines = file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
+			
+			for ($i = 0; $i <= (count($Lines) - 1); $i++) {
+				$Parts = explode("=", $Lines[$i]);
+
+				If ($Parts[0] == "var alarm_status") {
+					If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
+						SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
+					}
+				}
+			}
 		}
 	}
 	      
