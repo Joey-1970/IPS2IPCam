@@ -142,7 +142,7 @@
 		}
 	}
 	
-	public function GetState();
+	public function GetState()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddress");
