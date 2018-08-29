@@ -125,6 +125,11 @@
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
 	 	$this->SendDebug("ReceiveData", $JSONString, 0);
+		if (isset($data->Buffer)) {
+			$this->GetAlarmState();
+		}
+		
+		//{"DataID":"{018EF6B5-AB94-40C6-AA53-46943E824ACF}","Buffer":"GET / HTTP/1.0\r\nHOST: 192.168.178.119:5001\r\nUser-Agent: myclient/1.0 me@null.net\r\n\r\n"}
  	}
 	    
 	// Beginn der Funktionen
@@ -177,7 +182,18 @@
 		}
 	}
 	    
-	    
+	public function GetAlarmState();
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$IPAddress = $this->ReadPropertyString("IPAddress");
+			$Port = $this->ReadPropertyInteger("Port");
+			$User = $this->ReadPropertyString("User");
+			$Password = $this->ReadPropertyString("Password");
+			$Lines = array();
+			$lines = file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
+		}
+	}
+	      
 	private function GetParentID()
 	{
 		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
