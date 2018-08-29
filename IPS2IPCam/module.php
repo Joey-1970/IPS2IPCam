@@ -30,7 +30,8 @@
 		$this->EnableAction("MotionDetection");
 		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 30); // 0 - 10
 		$this->EnableAction("MotionSensibility");
-		// Mailversnd
+		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 30);
+		$this->EnableAction("Notification");
 		
         }
        	
