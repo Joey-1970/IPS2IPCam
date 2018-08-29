@@ -26,6 +26,12 @@
 		 // Statusvariablen anlegen
 		$this->RegisterVariableString("Stream", "Video-Stream", "~HTMLBox", 10);
 		
+		$this->RegisterVariableBoolean("MotionDetection", "Bewegungsmelder aktiv", "~Switch", 20);
+		$this->EnableAction("MotionDetection");
+		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 30); // 0 - 10
+		$this->EnableAction("MotionSensibility");
+		// Mailversnd
+		
         }
        	
 	public function GetConfigurationForm() { 
