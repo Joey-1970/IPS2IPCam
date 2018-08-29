@@ -6,7 +6,7 @@
 	{
 		//Never delete this line!
 		parent::Destroy();
-		
+		$this->SetTimerInterval("Timer_1", 0);
 	}
 	    
 	// Überschreibt die interne IPS_Create($id) Funktion
@@ -21,6 +21,8 @@
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("ServerSocketPort", 0);
 		$this->RegisterPropertyBoolean("Movable", false);
+		$this->RegisterPropertyInteger("Timer_1", 60); // Zustandsdaten einlesen
+		$this->RegisterTimer("Timer_1", 0, 'IPS2IPCam_GetState($_IPS["TARGET"]);');
 		
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
@@ -58,6 +60,8 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ServerSocketPort", "caption" => "Port:");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Movable", "caption" => "Steuerbar"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Abfrage der Zustandsdaten in Sekunden (0 -> aus, 1 sek -> Minimum)");
+		$arrayElements[] = array("type" => "IntervalBox", "name" => "Timer_1", "caption" => "Sekunden");
  		
  		
 		
@@ -101,15 +105,17 @@
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SetStreamData();
 				$this->SetStatus(102);
+				$this->GetState();
+				$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
 			}
 			else {
-				
+				$this->SetTimerInterval("Timer_1", 0);
 				$this->SetStatus(104);
 			}
 		}
 		else {
 			$this->SetStatus(104);
-			
+			$this->SetTimerInterval("Timer_1", 0);
 		}
 	}
 	
@@ -122,18 +128,53 @@
 	// Beginn der Funktionen
 	public function SetStreamData()
 	{
-		//Webfront: <div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >
-		//iPhone: <div align="center"><img src="http://jpaeper.dnsalias.com:8080/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 960px; height: 720px;" >
-		$IPAddress = $this->ReadPropertyString("IPAddress");
-		$Port = $this->ReadPropertyInteger("Port");
-		$User = $this->ReadPropertyString("User");
-		$Password = $this->ReadPropertyString("Password");
-		
-		$String = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
-		//$String = '<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >';
-		SetValueString($this->GetIDForIdent("StreamMobile"), $String);
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			//Webfront: <div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >
+			//iPhone: <div align="center"><img src="http://jpaeper.dnsalias.com:8080/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 960px; height: 720px;" >
+			$IPAddress = $this->ReadPropertyString("IPAddress");
+			$Port = $this->ReadPropertyInteger("Port");
+			$User = $this->ReadPropertyString("User");
+			$Password = $this->ReadPropertyString("Password");
+
+			$String = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
+			//$String = '<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >';
+			SetValueString($this->GetIDForIdent("StreamMobile"), $String);
+		}
 	}
 	
+	public function GetState();
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$IPAddress = $this->ReadPropertyString("IPAddress");
+			$Port = $this->ReadPropertyInteger("Port");
+			$User = $this->ReadPropertyString("User");
+			$Password = $this->ReadPropertyString("Password");
+
+			$Lines = array();
+			$lines = file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
+
+			for ($i = 0; $i <= (count($lines) - 1); $i++) {
+				$teile = explode("=", $lines[$i]);
+
+				If ($teile[0] == "var alarm_motion_sensitivity") {
+					If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($teile[1])) {
+						SetValueInteger($this->GetIDForIdent("MotionSensibility"), intval($teile[1]));
+					}
+				}
+				If ($teile[0] == "var alarm_motion_armed") {
+					If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($teile[1])) {
+						SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($teile[1]));
+					}
+				}
+				If ($teile[0] == "var alarm_mail") {
+					If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($teile[1])) {
+						SetValueBoolean($this->GetIDForIdent("Notification"), intval($teile[1]));
+					}
+				}
+			}
+		}
+	}
+	    
 	    
 	private function GetParentID()
 	{
@@ -167,6 +208,7 @@ function IP_Cam_Parameterstatus($ip, $user, $passwort, $port)
 {
 // Befehlsaufruf erstellen
 $Befehl = "http://".$ip.":".$port."/get_params.cgi?"."user=".$user."&pwd=".$passwort;
+http://192.168.178.11:80/get_params.cgi?"."user=admin&pwd=Dennis1999
 // Kamera Auslesen
 $handle = fopen($Befehl,"r"); // String öffnen
 $parameter = "";
