@@ -31,7 +31,7 @@
 		
 		$this->RegisterVariableString("StreamMobile", "Video-Stream mobil", "~HTMLBox", 20);
 		
-		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Switch", 30);
+		$this->RegisterVariableBoolean("MotionDetection", "Bewegungsmelder aktivieren", "~Switch", 30);
 		
 		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 40); // 0 - 10
 		$this->EnableAction("MotionSensibility");
@@ -39,6 +39,7 @@
 		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 50);
 		$this->EnableAction("Notification");
 		
+		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Switch", 60);
         }
        	
 	public function GetConfigurationForm() { 
@@ -162,8 +163,8 @@
 					}
 				}
 				If ($teile[0] == "var alarm_motion_armed") {
-					If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($teile[1])) {
-						SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($teile[1]));
+					If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($teile[1])) {
+						SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($teile[1]));
 					}
 				}
 				If ($teile[0] == "var alarm_mail") {
@@ -202,46 +203,7 @@
     	}  
 	    
 /*
-//*************************************************************************************************************
-// Diese Funktion liest den Parameterstatus aus einer IP-Cam aus
-function IP_Cam_Parameterstatus($ip, $user, $passwort, $port)
-{
-// Befehlsaufruf erstellen
-$Befehl = "http://".$ip.":".$port."/get_params.cgi?"."user=".$user."&pwd=".$passwort;
-http://192.168.178.11:80/get_params.cgi?"."user=admin&pwd=Dennis1999
-// Kamera Auslesen
-$handle = fopen($Befehl,"r"); // String öffnen
-$parameter = "";
-$parameter = stream_get_contents($handle); // String einlesen
-//echo $parameter;
-$parameterstatus = array();
-$parameterstatus = explode(";",$parameter);
 
-// Bewegungsmelder Sensibilität auslesen
-$BewegungsmelderSensibilitaet = 10 - (intval(substr($parameterstatus[150], -1, 1)));
-
-// Bewegungsmelder Aktivierung auslesen
-If ((intval(substr($parameterstatus[149], -1, 1)))== 1)
-	{
-	$BewegungsmelderStatus = true;
-	}
-elseif ((intval(substr($parameterstatus[149], -1, 1)))== 0)
-	{
-	$BewegungsmelderStatus = false;
-	}
-
-// Mailversand Aktivierung auslesen
-If ((intval(substr($parameterstatus[159], -1, 1)))== 1)
-	{
-	$MailversandStatus = true;
-	}
-elseif ((intval(substr($parameterstatus[159], -1, 1)))== 0)
-	{
-	$MailversandStatus = false;
-	}
-
-return array($BewegungsmelderSensibilitaet, $BewegungsmelderStatus, $MailversandStatus);
-}
 
 //*************************************************************************************************************
 // Diese Funktion prüft ob der Bewegungsmelder ausgelöst wurde
