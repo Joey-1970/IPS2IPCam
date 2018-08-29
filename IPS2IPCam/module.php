@@ -124,8 +124,9 @@
 	{
 	    	// Empfangene Daten vom Gateway/Splitter
 	    	$data = json_decode($JSONString);
-	 	
+	 	$this->SendDebug("ReceiveData", $JSONString, 0);
  	}
+	    
 	// Beginn der Funktionen
 	public function SetStreamData()
 	{
