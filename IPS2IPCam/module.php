@@ -20,14 +20,15 @@
 		$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("ServerSocketPort", 0);
+		$this->RegisterPropertyBoolean("Movable", false);
 		
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
 		 // Statusvariablen anlegen
 		$this->RegisterVariableString("Stream", "Video-Stream", "~HTMLBox", 10);
 		
-		$this->RegisterVariableBoolean("MotionDetection", "Bewegungsmelder aktiv", "~Switch", 20);
-		$this->EnableAction("MotionDetection");
+		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Switch", 20);
+		$this->EnableAction("MotionDetect");
 		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 30); // 0 - 10
 		$this->EnableAction("MotionSensibility");
 		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 30);
@@ -43,15 +44,17 @@
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft"); 
 		
 		$arrayElements = array(); 
-		$arrayElements[] = array("name" => "Open", "type" => "CheckBox",  "caption" => "Aktiv"); 
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddress", "caption" => "IP");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Port", "caption" => "Port:");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
-		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
-		
+		$arrayElements[] = array("type" => "Label", "label" => "Port auf dem Bewegungserkennungen gesendet werden:");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ServerSocketPort", "caption" => "Port:");
+		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "CheckBox", "name" => "Movable", "caption" => "Steuerbar"); 
  		
  		
 		
