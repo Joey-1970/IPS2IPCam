@@ -25,13 +25,16 @@
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
 		 // Statusvariablen anlegen
-		$this->RegisterVariableString("Stream", "Video-Stream", "~HTMLBox", 10);
+		$this->RegisterVariableString("StreamWebfront", "Video-Stream Webfront", "~HTMLBox", 10);
 		
-		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Switch", 20);
-		$this->EnableAction("MotionDetect");
-		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 30); // 0 - 10
+		$this->RegisterVariableString("StreamMobile", "Video-Stream mobil", "~HTMLBox", 20);
+		
+		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Switch", 30);
+		
+		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 40); // 0 - 10
 		$this->EnableAction("MotionSensibility");
-		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 30);
+		
+		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 50);
 		$this->EnableAction("Notification");
 		
         }
@@ -121,9 +124,14 @@
 	{
 		//Webfront: <div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >
 		//iPhone: <div align="center"><img src="http://jpaeper.dnsalias.com:8080/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 960px; height: 720px;" >
+		$IPAddress = $this->ReadPropertyString("IPAddress");
+		$Port = $this->ReadPropertyInteger("Port");
+		$User = $this->ReadPropertyString("User");
+		$Password = $this->ReadPropertyString("Password");
 		
-		$String = '<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >';
-		SetValueString($this->GetIDForIdent("Stream"), $String);
+		$String = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
+		//$String = '<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >';
+		SetValueString($this->GetIDForIdent("StreamMobile"), $String);
 	}
 	
 	    
