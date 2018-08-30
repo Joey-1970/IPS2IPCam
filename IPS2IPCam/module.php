@@ -15,8 +15,10 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
-		$this->RegisterPropertyString("IPAddress", "127.0.0.1");
-	    	$this->RegisterPropertyInteger("Port", 80);
+		$this->RegisterPropertyString("IPAddressInt", "127.0.0.1");
+	    	$this->RegisterPropertyInteger("PortInt", 80);
+		$this->RegisterPropertyString("IPAddressEx", "127.0.0.1");
+	    	$this->RegisterPropertyInteger("PortEx", 80);
 		$this->RegisterPropertyString("User", "User");
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("ServerSocketPort", 0);
@@ -54,9 +56,12 @@
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam:");
-		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddress", "caption" => "IP");
-		$arrayElements[] = array("type" => "NumberSpinner", "name" => "Port", "caption" => "Port:");
+		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam intern:");
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddressInt", "caption" => "IP");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PortInt", "caption" => "Port:");
+		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam extern:");
+		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddressEx", "caption" => "IP");
+		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PortEx", "caption" => "Port:");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
@@ -141,8 +146,8 @@
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			//Webfront: <div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >
 			//iPhone: <div align="center"><img src="http://jpaeper.dnsalias.com:8080/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 960px; height: 720px;" >
-			$IPAddress = $this->ReadPropertyString("IPAddress");
-			$Port = $this->ReadPropertyInteger("Port");
+			$IPAddress = $this->ReadPropertyString("IPAddressEx");
+			$Port = $this->ReadPropertyInteger("PortEx");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
 
@@ -155,8 +160,8 @@
 	public function GetState()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$IPAddress = $this->ReadPropertyString("IPAddress");
-			$Port = $this->ReadPropertyInteger("Port");
+			$IPAddress = $this->ReadPropertyString("IPAddressInt");
+			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
 
@@ -188,8 +193,8 @@
 	public function GetAlarmState()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$IPAddress = $this->ReadPropertyString("IPAddress");
-			$Port = $this->ReadPropertyInteger("Port");
+			$IPAddress = $this->ReadPropertyString("IPAddressInt");
+			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
 			
@@ -257,31 +262,7 @@
 /*
 
 
-//*************************************************************************************************************
-// Diese Funktion prüft ob der Bewegungsmelder ausgelöst wurde
-function IP_Cam_BewegungsmelderAusloesung($ip, $user, $passwort, $port)
-{
-// Befehlsaufruf erstellen http://192.168.178.11:80/get_status.cgi?.user=admin&pwd=Dennis1999
-$Befehl = "http://".$ip.":".$port."/get_status.cgi?"."user=".$user."&pwd=".$passwort;
-// Kamera Auslesen
-$handle = fopen($Befehl,"r"); // String öffnen
-$Status = "";
-$Status = stream_get_contents($handle); // String einlesen
-//echo $Status;
-$Alarmstatus = array();
-$Alarmstatus = explode(";",$Status);
 
-if (intval(substr($Alarmstatus[6], -1, 1)) == 1)
-  {
-  $BewegungsmelderAusloesung = true;
-  }
-  else
-  {
-  $BewegungsmelderAusloesung = false;
-  }
-
-return $BewegungsmelderAusloesung;
-}
 
 //*************************************************************************************************************
 // Diese Funktion setzt verschiedene Parameter der IP-Cam
