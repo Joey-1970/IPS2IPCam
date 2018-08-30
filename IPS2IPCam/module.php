@@ -182,7 +182,6 @@
 					}
 				}
 			}
-			$this->GetAlarmState();
 		}
 	}
 	    
@@ -203,6 +202,10 @@
 				If ($Parts[0] == "var alarm_status") {
 					If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
 						SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
+						If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) == true) {
+							IPS_Sleep(1000);
+							SetValueBoolean($this->GetIDForIdent("MotionDetect"), false);
+						}
 					}
 				}
 			}
