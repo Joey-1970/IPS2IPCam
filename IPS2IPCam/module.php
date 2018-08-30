@@ -26,14 +26,17 @@
 		
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
-		 // Statusvariablen anlegen
+		// Profil anlegen
+		$this->RegisterProfileInteger("IPS2IPCam.Sensibility", "Motion", "", "", 0, 10, 1);
+		
+		// Statusvariablen anlegen
 		$this->RegisterVariableString("StreamWebfront", "Video-Stream Webfront", "~HTMLBox", 10);
 		
 		$this->RegisterVariableString("StreamMobile", "Video-Stream mobil", "~HTMLBox", 20);
 		
 		$this->RegisterVariableBoolean("MotionDetection", "Bewegungsmelder aktivieren", "~Switch", 30);
 		
-		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "", 40); // 0 - 10
+		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "IPS2IPCam.Sensibility", 40); // 0 - 10
 		$this->EnableAction("MotionSensibility");
 		
 		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 50);
@@ -205,7 +208,24 @@
 			}
 		}
 	}
-	      
+	
+	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
+	{
+	        if (!IPS_VariableProfileExists($Name))
+	        {
+	            IPS_CreateVariableProfile($Name, 1);
+	        }
+	        else
+	        {
+	            $profile = IPS_GetVariableProfile($Name);
+	            if ($profile['ProfileType'] != 1)
+	                throw new Exception("Variable profile type does not match for profile " . $Name);
+	        }
+	        IPS_SetVariableProfileIcon($Name, $Icon);
+	        IPS_SetVariableProfileText($Name, $Prefix, $Suffix);
+	        IPS_SetVariableProfileValues($Name, $MinValue, $MaxValue, $StepSize);        
+	}    
+	    
 	private function GetParentID()
 	{
 		$ParentID = (IPS_GetInstance($this->InstanceID)['ConnectionID']);  
