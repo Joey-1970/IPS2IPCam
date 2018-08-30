@@ -249,7 +249,7 @@
 			$MotionDetection = intval(GetValueBoolean($this->GetIDForIdent("MotionDetection")));
 			$Notification = intval(GetValueBoolean($this->GetIDForIdent("Notification")));
 			
-			file_get_contents('http://$ip:$port/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
+			file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
 			$this->GetState();
 		}
 	}
