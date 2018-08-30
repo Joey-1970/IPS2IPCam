@@ -37,6 +37,7 @@
 		$this->RegisterVariableString("StreamMobile", "Video-Stream mobil", "~HTMLBox", 20);
 		
 		$this->RegisterVariableBoolean("MotionDetection", "Bewegungsmelder aktivieren", "~Switch", 30);
+		$this->EnableAction("MotionDetection");
 		
 		$this->RegisterVariableInteger("MotionSensibility", "Bewegungsmelder Sensibilität", "IPS2IPCam.Sensibility", 40); // 0 - 10
 		$this->EnableAction("MotionSensibility");
@@ -142,6 +143,23 @@
 		//{"DataID":"{018EF6B5-AB94-40C6-AA53-46943E824ACF}","Buffer":"GET / HTTP/1.0\r\nHOST: 192.168.178.119:5001\r\nUser-Agent: myclient/1.0 me@null.net\r\n\r\n"}
  	}
 	    
+	public function RequestAction($Ident, $Value) 
+	{
+  		switch($Ident) {
+	        case "MotionDetection":
+			$this->SetState();
+	        break;
+		case "MotionSensibility":
+			$this->SetState();
+	        break;
+		case "Notification":
+			$this->SetState();
+	        break;
+	        default:
+	            throw new Exception("Invalid Ident");
+	    	}
+	}
+	    
 	// Beginn der Funktionen
 	public function SetStreamData()
 	{
@@ -231,12 +249,8 @@
 			$MotionDetection = intval(GetValueBoolean($this->GetIDForIdent("MotionDetection")));
 			$Notification = intval(GetValueBoolean($this->GetIDForIdent("Notification")));
 			
-			$BewegungsmelderSensibilitaet = 10 - $BewegungsmelderSensibilitaet;
-			$BewegungsmelderStatusInt = (int)$BewegungsmelderStatus;
-			$MailversandStatusInt = (int)$MailversandStatus;
-
 			file_get_contents('http://$ip:$port/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
-
+			$this->GetState();
 		}
 	}
 	    
