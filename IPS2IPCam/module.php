@@ -43,8 +43,10 @@
 		
 		$this->RegisterVariableBoolean("Notification", "Benachrichtigung", "~Switch", 50);
 		$this->EnableAction("Notification");
+		IPS_SetIcon($this->GetIDForIdent("Notification"), "Mail");
 		
-		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Switch", 60);
+		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Motion", 60);
+		IPS_SetIcon($this->GetIDForIdent("MotionDetect"), "Motion");
         }
        	
 	public function GetConfigurationForm() { 
@@ -173,7 +175,7 @@
 
 				If ($Parts[0] == "var alarm_motion_sensitivity") {
 					If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($Parts[1])) {
-						SetValueInteger($this->GetIDForIdent("MotionSensibility"), intval($Parts[1]));
+						SetValueInteger($this->GetIDForIdent("MotionSensibility"), 10 - intval($Parts[1]));
 					}
 				}
 				If ($Parts[0] == "var alarm_motion_armed") {
@@ -217,6 +219,27 @@
 		}
 	}
 	
+	public function SetState()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$IPAddress = $this->ReadPropertyString("IPAddressInt");
+			$Port = $this->ReadPropertyInteger("PortInt");
+			$User = $this->ReadPropertyString("User");
+			$Password = $this->ReadPropertyString("Password");
+			
+			$MotionSensibility = 10 - GetValueInteger($this->GetIDForIdent("MotionSensibility"));
+			$MotionDetection = intval(GetValueBoolean($this->GetIDForIdent("MotionDetection")));
+			$Notification = intval(GetValueBoolean($this->GetIDForIdent("Notification")));
+			
+			$BewegungsmelderSensibilitaet = 10 - $BewegungsmelderSensibilitaet;
+			$BewegungsmelderStatusInt = (int)$BewegungsmelderStatus;
+			$MailversandStatusInt = (int)$MailversandStatus;
+
+			file_get_contents('http://$ip:$port/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
+
+		}
+	}
+	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
 	{
 	        if (!IPS_VariableProfileExists($Name))
