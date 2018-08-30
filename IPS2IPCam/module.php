@@ -145,14 +145,18 @@
 	    
 	public function RequestAction($Ident, $Value) 
 	{
-  		switch($Ident) {
+  		
+		switch($Ident) {
 	        case "MotionDetection":
+			SetValueBoolean($this->GetIDForIdent($Ident), $Value);
 			$this->SetState();
 	        break;
 		case "MotionSensibility":
+			SetValueInteger($this->GetIDForIdent($Ident), $Value);
 			$this->SetState();
 	        break;
 		case "Notification":
+			SetValueBoolean($this->GetIDForIdent($Ident), $Value);
 			$this->SetState();
 	        break;
 	        default:
