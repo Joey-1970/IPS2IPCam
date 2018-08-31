@@ -282,7 +282,7 @@
 	    
 	public function Move(int $Direction)
 	{
-		If ($this->ReadPropertyBoolean("Open") == true) {
+		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ReadPropertyBoolean("Movable") == true)) {
 			$IPAddress = $this->ReadPropertyString("IPAddressInt");
 			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
