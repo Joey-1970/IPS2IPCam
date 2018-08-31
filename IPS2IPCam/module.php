@@ -138,11 +138,15 @@
 				$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
 			}
 			else {
+				SetValueString($this->GetIDForIdent("StreamMobile"), "");
+				SetValueString($this->GetIDForIdent("StreamWebfront"), "");
 				$this->SetTimerInterval("Timer_1", 0);
 				$this->SetStatus(104);
 			}
 		}
 		else {
+			SetValueString($this->GetIDForIdent("StreamMobile"), "");
+			SetValueString($this->GetIDForIdent("StreamWebfront"), "");
 			$this->SetStatus(104);
 			$this->SetTimerInterval("Timer_1", 0);
 		}
@@ -196,9 +200,14 @@
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
 
-			$String = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
-			//$String = '<div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >';
-			SetValueString($this->GetIDForIdent("StreamMobile"), $String);
+			$HTMLMobil = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
+			SetValueString($this->GetIDForIdent("StreamMobile"), $HTMLMobil);
+			$HTMLWebfront = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 100%; height: 100%;" >';
+			SetValueString($this->GetIDForIdent("StreamWebfront"), $HTMLWebfront);
+		}
+		else {
+			SetValueString($this->GetIDForIdent("StreamMobile"), "");
+			SetValueString($this->GetIDForIdent("StreamWebfront"), "");
 		}
 	}
 	
