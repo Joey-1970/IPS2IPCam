@@ -48,6 +48,8 @@
 		
 		$this->RegisterVariableBoolean("MotionDetect", "Bewegungsmelder Auslösung", "~Motion", 60);
 		IPS_SetIcon($this->GetIDForIdent("MotionDetect"), "Motion");
+		
+		$this->RegisterVariableInteger("LastMotionDetect", "Letzte Auslösung", "~UnixTimestamp", 70);
         }
        	
 	public function GetConfigurationForm() { 
@@ -231,6 +233,7 @@
 				If ($Parts[0] == "var alarm_status") {
 					If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
 						SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
+						SetValueInteger($this->GetIDForIdent("LastMotionDetect"),  time());
 						If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) == true) {
 							IPS_Sleep(1000);
 							SetValueBoolean($this->GetIDForIdent("MotionDetect"), false);
