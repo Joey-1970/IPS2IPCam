@@ -30,6 +30,14 @@
 		
 		// Profil anlegen
 		$this->RegisterProfileInteger("IPS2IPCam.Sensibility", "Motion", "", "", 0, 10, 1);
+		$this->RegisterProfileInteger("IPS2IPCam.Move", "Distance", "", " km", 0, 10000, 1);
+		
+		$this->RegisterProfileInteger("IPS2IPCam.Move", "Move", "", "", 0, 4, 1);
+		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 0, "hoch", "HollowArrowUp", -1);
+		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 1, "runter", "HollowArrowDown", -1);
+		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 2, "links", "HollowArrowLeft", -1);
+		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 3, "rechts", "HollowArrowRight", -1);
+		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 4, "zentrieren", "Move", -1);
 		
 		// Statusvariablen anlegen
 		$this->RegisterVariableString("StreamWebfront", "Video-Stream Webfront", "~HTMLBox", 10);
@@ -50,6 +58,8 @@
 		IPS_SetIcon($this->GetIDForIdent("MotionDetect"), "Motion");
 		
 		$this->RegisterVariableInteger("LastMotionDetect", "Letzte Auslösung", "~UnixTimestamp", 70);
+		
+		
         }
        	
 	public function GetConfigurationForm() { 
@@ -113,6 +123,11 @@
 			}
 		}
 		
+		If ($this->ReadPropertyBoolean("Movable") == true) {
+			$this->RegisterVariableInteger("Move", "Steuerung", "IPS2IPCam.Move", 80); 
+			$this->EnableAction("Move");
+		}
+		
 		
 		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
 						
@@ -160,6 +175,10 @@
 		case "Notification":
 			SetValueBoolean($this->GetIDForIdent($Ident), $Value);
 			$this->SetState();
+	        break;
+		case "Move":
+			SetValueInteger($this->GetIDForIdent($Ident), $Value);
+			$this->Move($Value);
 	        break;
 	        default:
 	            throw new Exception("Invalid Ident");
@@ -258,6 +277,20 @@
 			
 			file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
 			$this->GetState();
+		}
+	}
+	    
+	public function Move(int $Direction)
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$IPAddress = $this->ReadPropertyString("IPAddressInt");
+			$Port = $this->ReadPropertyInteger("PortInt");
+			$User = $this->ReadPropertyString("User");
+			$Password = $this->ReadPropertyString("Password");
+			
+			// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
+			$DirectionArray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
+			file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
 		}
 	}
 	    
