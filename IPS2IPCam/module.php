@@ -29,7 +29,7 @@
  	    	$this->RequireParent("{8062CF2B-600E-41D6-AD4B-1BA66C32D6ED}"); // Server Socket 
 		
 		// Profil anlegen
-		$this->RegisterProfileInteger("IPS2IPCam.Sensibility", "Motion", "", "", 0, 10, 0);
+		$this->RegisterProfileInteger("IPS2IPCam.Sensibility", "Motion", "", "", 0, 10, 1);
 				
 		$this->RegisterProfileInteger("IPS2IPCam.Move", "Move", "", "", 0, 4, 0);
 		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 0, "hoch", "HollowArrowUp", -1);
