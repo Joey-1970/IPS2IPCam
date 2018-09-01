@@ -300,6 +300,7 @@
 			
 			// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
 			$DirectionArray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
+			$this->SendDebug("Move", "String: ".'http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password, 0);
 			                                                  //decoder_control.cgi?command=0&onestep=1&user=&pwd=
 			file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
 		}
