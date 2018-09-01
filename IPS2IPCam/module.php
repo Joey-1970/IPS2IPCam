@@ -292,6 +292,7 @@
 	public function Move(int $Direction)
 	{
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ReadPropertyBoolean("Movable") == true)) {
+			$this->SendDebug("Move", "Richtung: ".$Direction, 0);
 			$IPAddress = $this->ReadPropertyString("IPAddressInt");
 			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
@@ -299,6 +300,7 @@
 			
 			// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
 			$DirectionArray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
+			                                                  /decoder_control.cgi?command=0&onestep=1&user=&pwd=
 			file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
 		}
 	}
