@@ -129,7 +129,7 @@
 		}
 		
 		
-		If ((IPS_GetKernelRunlevel() == 10103) AND ($this->HasActiveParent() == true)) {
+		If (IPS_GetKernelRunlevel() == 10103) {
 						
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SetStreamData();
