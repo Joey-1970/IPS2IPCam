@@ -243,6 +243,7 @@
 	    
 	public function GetAlarmState()
 	{
+		$Result = false;
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddressInt");
 			$Port = $this->ReadPropertyInteger("PortInt");
@@ -252,25 +253,36 @@
 			$Lines = array();
 			$Lines = file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
 			
-			for ($i = 0; $i <= (count($Lines) - 1); $i++) {
-				$Parts = explode("=", $Lines[$i]);
+			If ($Lines === false) {
+				$this->SendDebug("GetAlarmState", "Es ist ein Fehler aufgetreten!", 0);
+				$this->SetStatus(202);
+				$Result = false;
+			}
+			else {
+				for ($i = 0; $i <= (count($Lines) - 1); $i++) {
+					$Parts = explode("=", $Lines[$i]);
 
-				If ($Parts[0] == "var alarm_status") {
-					If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
-						SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
-						SetValueInteger($this->GetIDForIdent("LastMotionDetect"),  time());
-						If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) == true) {
-							IPS_Sleep(1000);
-							SetValueBoolean($this->GetIDForIdent("MotionDetect"), false);
+					If ($Parts[0] == "var alarm_status") {
+						If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
+							SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
+							SetValueInteger($this->GetIDForIdent("LastMotionDetect"),  time());
+							If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) == true) {
+								IPS_Sleep(1000);
+								SetValueBoolean($this->GetIDForIdent("MotionDetect"), false);
+							}
 						}
 					}
 				}
+				$this->SetStatus(102);
+				$Result = true;
 			}
 		}
+	Return $Result;
 	}
 	
 	public function SetState()
 	{
+		$Result = false;
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddressInt");
 			$Port = $this->ReadPropertyInteger("PortInt");
@@ -298,6 +310,7 @@
 	    
 	public function Move(int $Direction)
 	{
+		$Result = false;
 		If (($this->ReadPropertyBoolean("Open") == true) AND ($this->ReadPropertyBoolean("Movable") == true)) {
 			$this->SendDebug("Move", "Richtung: ".$Direction, 0);
 			$IPAddress = $this->ReadPropertyString("IPAddressInt");
