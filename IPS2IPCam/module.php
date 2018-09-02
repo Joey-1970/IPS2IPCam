@@ -299,8 +299,7 @@
 			
 			// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
 			$DirectionArray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
-			$this->SendDebug("Move", "String: ".'http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password, 0);
-			                                                  //decoder_control.cgi?command=0&onestep=1&user=&pwd=
+			//$this->SendDebug("Move", "String: ".'http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password, 0);
 			file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
 		}
 	}
@@ -346,35 +345,6 @@
 		}
         return false;
     	}  
-	    
-/*
-
-
-
-
-//*************************************************************************************************************
-// Diese Funktion setzt verschiedene Parameter der IP-Cam
-function IP_Cam_Parameter($ip, $user, $passwort, $port, $BewegungsmelderSensibilitaet, $BewegungsmelderStatus, $MailversandStatus)
-{
-$BewegungsmelderSensibilitaet = 10 - $BewegungsmelderSensibilitaet;
-$BewegungsmelderStatusInt = (int)$BewegungsmelderStatus;
-$MailversandStatusInt = (int)$MailversandStatus;
-
-file_get_contents("http://$ip:$port/set_alarm.cgi?motion_armed=$BewegungsmelderStatusInt&mail=$MailversandStatusInt&motion_sensitivity=$BewegungsmelderSensibilitaet&motion_compensation=1&user=$user&pwd=$passwort");
-
-return;
-}
-
-//*************************************************************************************************************
-// Diese Funktion steuert die Bewegung der IP-Cam
-// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
-function IP_Cam_Steuerung($ip, $user, $passwort, $port, $Bewegung)
-{
-$Bewegungsarray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
-file_get_contents("http://$ip:$port/decoder_control.cgi?command=$Bewegungsarray[$Bewegung]&onestep=1&user=$user&pwd=$passwort");
-return;
-}   
-*/
 
 }
 ?>
