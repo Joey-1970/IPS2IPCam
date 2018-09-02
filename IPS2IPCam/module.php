@@ -2,6 +2,7 @@
     // Klassendefinition
     class IPS2IPCam extends IPSModule 
     {
+	// https://wiki.instar.de/Erweitert/CGI_Befehle/VGA_Serie_CGI_Befehle/
 	public function Destroy() 
 	{
 		//Never delete this line!
