@@ -210,6 +210,7 @@
 	
 	public function GetState()
 	{
+		$Result = false;
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddressInt");
 			$Port = $this->ReadPropertyInteger("PortInt");
@@ -219,26 +220,36 @@
 			$Lines = array();
 			$Lines = file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
 
-			for ($i = 0; $i <= (count($Lines) - 1); $i++) {
-				$Parts = explode("=", $Lines[$i]);
+			If ($Lines === false) {
+				$this->SendDebug("GetState", "Es ist ein Fehler aufgetreten!", 0);
+				$this->SetStatus(202);
+				$Result = false;
+			}
+			else {
+				for ($i = 0; $i <= (count($Lines) - 1); $i++) {
+					$Parts = explode("=", $Lines[$i]);
 
-				If ($Parts[0] == "var alarm_motion_sensitivity") {
-					If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($Parts[1])) {
-						SetValueInteger($this->GetIDForIdent("MotionSensibility"), 10 - intval($Parts[1]));
+					If ($Parts[0] == "var alarm_motion_sensitivity") {
+						If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($Parts[1])) {
+							SetValueInteger($this->GetIDForIdent("MotionSensibility"), 10 - intval($Parts[1]));
+						}
+					}
+					If ($Parts[0] == "var alarm_motion_armed") {
+						If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($Parts[1])) {
+							SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($Parts[1]));
+						}
+					}
+					If ($Parts[0] == "var alarm_mail") {
+						If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($Parts[1])) {
+							SetValueBoolean($this->GetIDForIdent("Notification"), intval($Parts[1]));
+						}
 					}
 				}
-				If ($Parts[0] == "var alarm_motion_armed") {
-					If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($Parts[1])) {
-						SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($Parts[1]));
-					}
-				}
-				If ($Parts[0] == "var alarm_mail") {
-					If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($Parts[1])) {
-						SetValueBoolean($this->GetIDForIdent("Notification"), intval($Parts[1]));
-					}
-				}
+				$this->SetStatus(102);
+				$Result = true;
 			}
 		}
+	Return $Result;
 	}
 	    
 	public function GetAlarmState()
