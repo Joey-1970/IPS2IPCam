@@ -68,6 +68,7 @@
 		$arrayStatus[] = array("code" => 102, "icon" => "active", "caption" => "Instanz ist aktiv");
 		$arrayStatus[] = array("code" => 104, "icon" => "inactive", "caption" => "Instanz ist inaktiv");
 		$arrayStatus[] = array("code" => 200, "icon" => "error", "caption" => "Instanz ist fehlerhaft"); 
+		$arrayStatus[] = array("code" => 202, "icon" => "error", "caption" => "HTTP-Kommunikationfehler!");
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
@@ -159,9 +160,7 @@
 	 	$this->SendDebug("ReceiveData", $JSONString, 0);
 		if (isset($data->Buffer)) {
 			$this->GetAlarmState();
-		}
-		
-		//{"DataID":"{018EF6B5-AB94-40C6-AA53-46943E824ACF}","Buffer":"GET / HTTP/1.0\r\nHOST: 192.168.178.119:5001\r\nUser-Agent: myclient/1.0 me@null.net\r\n\r\n"}
+		}		
  	}
 	    
 	public function RequestAction($Ident, $Value) 
@@ -193,8 +192,6 @@
 	public function SetStreamData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			//Webfront: <div align="center"><img src="http://jpaeper.dnsalias.com:8081/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 100%; height: 100%;" >
-			//iPhone: <div align="center"><img src="http://jpaeper.dnsalias.com:8080/videostream.cgi?user=admin&pwd=Dennis1999" style="width: 960px; height: 720px;" >
 			$IPAddress = $this->ReadPropertyString("IPAddressEx");
 			$Port = $this->ReadPropertyInteger("PortEx");
 			$User = $this->ReadPropertyString("User");
@@ -284,9 +281,19 @@
 			$MotionDetection = intval(GetValueBoolean($this->GetIDForIdent("MotionDetection")));
 			$Notification = intval(GetValueBoolean($this->GetIDForIdent("Notification")));
 			
-			file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
-			$this->GetState();
+			$Result = file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
+			If ($Result === false) {
+				$this->SendDebug("SetState", "Es ist ein Fehler aufgetreten!", 0);
+				$this->SetStatus(202);
+				$Result = false;
+			}
+			else {
+				$this->SetStatus(102);
+				$Result = true;
+				$this->GetState();
+			}
 		}
+	Return $Result;
 	}
 	    
 	public function Move(int $Direction)
@@ -300,9 +307,19 @@
 			
 			// 0=hoch, 1=runter, 2=links, 3=rechts, 4=zentral
 			$DirectionArray = array(0, 1=>2, 2=>4, 3=>6, 4=>31);
-			//$this->SendDebug("Move", "String: ".'http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password, 0);
-			file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
+			
+			$Result = file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
+			If ($Result === false) {
+				$this->SendDebug("Move", "Es ist ein Fehler aufgetreten!", 0);
+				$this->SetStatus(202);
+				$Result = false;
+			}
+			else {
+				$this->SetStatus(102);
+				$Result = true;
+			}
 		}
+	Return $Result;
 	}
 	    
 	private function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
