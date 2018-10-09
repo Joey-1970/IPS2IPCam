@@ -128,9 +128,6 @@
 			$this->RegisterVariableInteger("Move", "Steuerung", "IPS2IPCam.Move", 80); 
 			$this->EnableAction("Move");
 		}
-		
-		
-		If (IPS_GetKernelRunlevel() == 10103) {
 						
 			If ($this->ReadPropertyBoolean("Open") == true) {
 				$this->SetStreamData();
@@ -144,12 +141,6 @@
 				$this->SetTimerInterval("Timer_1", 0);
 				$this->SetStatus(104);
 			}
-		}
-		else {
-			SetValueString($this->GetIDForIdent("StreamMobile"), "");
-			SetValueString($this->GetIDForIdent("StreamWebfront"), "");
-			$this->SetStatus(104);
-			$this->SetTimerInterval("Timer_1", 0);
 		}
 	}
 	
