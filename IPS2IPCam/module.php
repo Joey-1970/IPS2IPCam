@@ -128,20 +128,20 @@
 			$this->RegisterVariableInteger("Move", "Steuerung", "IPS2IPCam.Move", 80); 
 			$this->EnableAction("Move");
 		}
-						
-			If ($this->ReadPropertyBoolean("Open") == true) {
-				$this->SetStreamData();
-				$this->SetStatus(102);
-				$this->GetState();
-				$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
-			}
-			else {
-				SetValueString($this->GetIDForIdent("StreamMobile"), "");
-				SetValueString($this->GetIDForIdent("StreamWebfront"), "");
-				$this->SetTimerInterval("Timer_1", 0);
-				$this->SetStatus(104);
-			}
+					
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$this->SetStreamData();
+			$this->SetStatus(102);
+			$this->GetState();
+			$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
 		}
+		else {
+			SetValueString($this->GetIDForIdent("StreamMobile"), "");
+			SetValueString($this->GetIDForIdent("StreamWebfront"), "");
+			$this->SetTimerInterval("Timer_1", 0);
+			$this->SetStatus(104);
+		}
+		
 	}
 	
 	public function ReceiveData($JSONString) 
