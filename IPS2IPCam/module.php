@@ -209,7 +209,7 @@
 			$Password = $this->ReadPropertyString("Password");
 
 			$Lines = array();
-			$Lines = file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
+			$Lines = @file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
 
 			If ($Lines === false) {
 				$this->SendDebug("GetState", "Es ist ein Fehler aufgetreten!", 0);
@@ -253,7 +253,7 @@
 			$Password = $this->ReadPropertyString("Password");
 			
 			$Lines = array();
-			$Lines = file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
+			$Lines = @file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
 			
 			If ($Lines === false) {
 				$this->SendDebug("GetAlarmState", "Es ist ein Fehler aufgetreten!", 0);
