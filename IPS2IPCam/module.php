@@ -16,6 +16,7 @@
             	// Diese Zeile nicht löschen.
             	parent::Create();
             	$this->RegisterPropertyBoolean("Open", false);
+		$this->RegisterPropertyInteger("Type", 0);
 		$this->RegisterPropertyString("IPAddressInt", "127.0.0.1");
 	    	$this->RegisterPropertyInteger("PortInt", 80);
 		$this->RegisterPropertyString("IPAddressEx", "127.0.0.1");
@@ -72,6 +73,12 @@
 		
 		$arrayElements = array(); 
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Open", "caption" => "Aktiv"); 
+		$arrayOptions = array();
+		$arrayOptions[] = array("label" => "VGA", "value" => 0);
+		$arrayOptions[] = array("label" => "720p", "value" => 1);
+		$arrayOptions[] = array("label" => "1080p", "value" => 2);
+		$arrayElements[] = array("type" => "Select", "name" => "Type", "caption" => "Kamera Typ", "options" => $arrayOptions );
+
 		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam intern:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddressInt", "caption" => "IP");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PortInt", "caption" => "Port:");
