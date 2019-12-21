@@ -223,37 +223,40 @@
 			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
+			$Type = $this->ReadPropertyInteger("Type");
+			
+			If ($Type == 0) {
+				$Lines = array();
+				$Lines = @file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
 
-			$Lines = array();
-			$Lines = @file('http://'.$IPAddress.':'.$Port.'/get_params.cgi?user='.$User.'&pwd='.$Password);
-
-			If ($Lines === false) {
-				$this->SendDebug("GetState", "Es ist ein Fehler aufgetreten!", 0);
-				$this->SetStatus(202);
-				$Result = false;
-			}
-			else {
-				for ($i = 0; $i <= (count($Lines) - 1); $i++) {
-					$Parts = explode("=", $Lines[$i]);
-
-					If ($Parts[0] == "var alarm_motion_sensitivity") {
-						If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($Parts[1])) {
-							SetValueInteger($this->GetIDForIdent("MotionSensibility"), 10 - intval($Parts[1]));
-						}
-					}
-					If ($Parts[0] == "var alarm_motion_armed") {
-						If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($Parts[1])) {
-							SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($Parts[1]));
-						}
-					}
-					If ($Parts[0] == "var alarm_mail") {
-						If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($Parts[1])) {
-							SetValueBoolean($this->GetIDForIdent("Notification"), intval($Parts[1]));
-						}
-					}
+				If ($Lines === false) {
+					$this->SendDebug("GetState", "Es ist ein Fehler aufgetreten!", 0);
+					$this->SetStatus(202);
+					$Result = false;
 				}
-				$this->SetStatus(102);
-				$Result = true;
+				else {
+					for ($i = 0; $i <= (count($Lines) - 1); $i++) {
+						$Parts = explode("=", $Lines[$i]);
+
+						If ($Parts[0] == "var alarm_motion_sensitivity") {
+							If (GetValueInteger($this->GetIDForIdent("MotionSensibility")) <> intval($Parts[1])) {
+								SetValueInteger($this->GetIDForIdent("MotionSensibility"), 10 - intval($Parts[1]));
+							}
+						}
+						If ($Parts[0] == "var alarm_motion_armed") {
+							If (GetValueBoolean($this->GetIDForIdent("MotionDetection")) <> intval($Parts[1])) {
+								SetValueBoolean($this->GetIDForIdent("MotionDetection"), intval($Parts[1]));
+							}
+						}
+						If ($Parts[0] == "var alarm_mail") {
+							If (GetValueBoolean($this->GetIDForIdent("Notification")) <> intval($Parts[1])) {
+								SetValueBoolean($this->GetIDForIdent("Notification"), intval($Parts[1]));
+							}
+						}
+					}
+					$this->SetStatus(102);
+					$Result = true;
+				}
 			}
 		}
 	Return $Result;
@@ -267,32 +270,35 @@
 			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
+			$Type = $this->ReadPropertyInteger("Type");
 			
-			$Lines = array();
-			$Lines = @file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
-			
-			If ($Lines === false) {
-				$this->SendDebug("GetAlarmState", "Es ist ein Fehler aufgetreten!", 0);
-				$this->SetStatus(202);
-				$Result = false;
-			}
-			else {
-				for ($i = 0; $i <= (count($Lines) - 1); $i++) {
-					$Parts = explode("=", $Lines[$i]);
+			If ($Type == 0) {
+				$Lines = array();
+				$Lines = @file('http://'.$IPAddress.':'.$Port.'/get_status.cgi?user='.$User.'&pwd='.$Password);
 
-					If ($Parts[0] == "var alarm_status") {
-						If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
-							SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
-							SetValueInteger($this->GetIDForIdent("LastMotionDetect"),  time());
-							If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) == true) {
-								IPS_Sleep(1000);
-								SetValueBoolean($this->GetIDForIdent("MotionDetect"), false);
+				If ($Lines === false) {
+					$this->SendDebug("GetAlarmState", "Es ist ein Fehler aufgetreten!", 0);
+					$this->SetStatus(202);
+					$Result = false;
+				}
+				else {
+					for ($i = 0; $i <= (count($Lines) - 1); $i++) {
+						$Parts = explode("=", $Lines[$i]);
+
+						If ($Parts[0] == "var alarm_status") {
+							If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) <> intval($Parts[1])) {
+								SetValueBoolean($this->GetIDForIdent("MotionDetect"), intval($Parts[1]));
+								SetValueInteger($this->GetIDForIdent("LastMotionDetect"),  time());
+								If (GetValueBoolean($this->GetIDForIdent("MotionDetect")) == true) {
+									IPS_Sleep(1000);
+									SetValueBoolean($this->GetIDForIdent("MotionDetect"), false);
+								}
 							}
 						}
 					}
+					$this->SetStatus(102);
+					$Result = true;
 				}
-				$this->SetStatus(102);
-				$Result = true;
 			}
 		}
 	Return $Result;
@@ -306,21 +312,24 @@
 			$Port = $this->ReadPropertyInteger("PortInt");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
+			$Type = $this->ReadPropertyInteger("Type");
 			
-			$MotionSensibility = 10 - GetValueInteger($this->GetIDForIdent("MotionSensibility"));
-			$MotionDetection = intval(GetValueBoolean($this->GetIDForIdent("MotionDetection")));
-			$Notification = intval(GetValueBoolean($this->GetIDForIdent("Notification")));
-			
-			$Result = file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
-			If ($Result === false) {
-				$this->SendDebug("SetState", "Es ist ein Fehler aufgetreten!", 0);
-				$this->SetStatus(202);
-				$Result = false;
-			}
-			else {
-				$this->SetStatus(102);
-				$Result = true;
-				$this->GetState();
+			If ($Type == 0) {
+				$MotionSensibility = 10 - GetValueInteger($this->GetIDForIdent("MotionSensibility"));
+				$MotionDetection = intval(GetValueBoolean($this->GetIDForIdent("MotionDetection")));
+				$Notification = intval(GetValueBoolean($this->GetIDForIdent("Notification")));
+
+				$Result = file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
+				If ($Result === false) {
+					$this->SendDebug("SetState", "Es ist ein Fehler aufgetreten!", 0);
+					$this->SetStatus(202);
+					$Result = false;
+				}
+				else {
+					$this->SetStatus(102);
+					$Result = true;
+					$this->GetState();
+				}
 			}
 		}
 	Return $Result;
