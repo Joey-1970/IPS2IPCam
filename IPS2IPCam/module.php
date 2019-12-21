@@ -194,10 +194,19 @@
 			$Port = $this->ReadPropertyInteger("PortEx");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
+			$Type = $this->ReadPropertyInteger("Type");
+			$Channel = 11;
+			If ($Type == 0) {
+				$HTMLMobil = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
+				$HTMLWebfront = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 100%; height: 100%;" >';
+			}
+			elseif ($Type == 1) {
+				//http://IP-Address:Port/mjpegstream.cgi?-chn=11&-usr=admin&-pwd=instar
+				$HTMLMobil = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/mjpegstream.cgi?-chn='.$Channel.'&-usr='.$User.'&-pwd='.$Password.'" style="width: 960px; height: 720px;" >';
+				$HTMLWebfront = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/mjpegstream.cgi?-chn='.$Channel.'&-usr='.$User.'&-pwd='.$Password.'" style="width: 100%; height: 100%;" >';
 
-			$HTMLMobil = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 960px; height: 720px;" >';
+			}
 			SetValueString($this->GetIDForIdent("StreamMobile"), $HTMLMobil);
-			$HTMLWebfront = '<div align="center"><img src="http://'.$IPAddress.':'.$Port.'/videostream.cgi?user='.$User.'&pwd='.$Password.'" style="width: 100%; height: 100%;" >';
 			SetValueString($this->GetIDForIdent("StreamWebfront"), $HTMLWebfront);
 		}
 		else {
