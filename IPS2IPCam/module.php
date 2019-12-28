@@ -41,9 +41,9 @@
 		IPS_SetVariableProfileAssociation("IPS2IPCam.Move", 4, "zentrieren", "Move", -1);
 		
 		// Statusvariablen anlegen
-		$this->RegisterVariableString("StreamWebfront", "Video-Stream Webfront", "~HTMLBox", 10);
+		//$this->RegisterVariableString("StreamWebfront", "Video-Stream Webfront", "~HTMLBox", 10);
 		
-		$this->RegisterVariableString("StreamMobile", "Video-Stream mobil", "~HTMLBox", 20);
+		//$this->RegisterVariableString("StreamMobile", "Video-Stream mobil", "~HTMLBox", 20);
 		
 		$this->RegisterVariableBoolean("MotionDetection", "Bewegungsmelder aktivieren", "~Switch", 30);
 		$this->EnableAction("MotionDetection");
@@ -137,14 +137,14 @@
 		}
 					
 		If ($this->ReadPropertyBoolean("Open") == true) {
-			$this->SetStreamData();
+			//$this->SetStreamData();
 			$this->SetStatus(102);
 			$this->GetState();
 			$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
 		}
 		else {
-			SetValueString($this->GetIDForIdent("StreamMobile"), "");
-			SetValueString($this->GetIDForIdent("StreamWebfront"), "");
+			//SetValueString($this->GetIDForIdent("StreamMobile"), "");
+			//SetValueString($this->GetIDForIdent("StreamWebfront"), "");
 			$this->SetTimerInterval("Timer_1", 0);
 			$this->SetStatus(104);
 		}
