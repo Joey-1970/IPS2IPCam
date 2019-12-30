@@ -300,6 +300,9 @@
 					$Result = true;
 				}
 			}
+			elseif ($Type == 1) {
+				SetValueInteger($this->GetIDForIdent("LastMotionDetect"),  time());
+			}
 		}
 	Return $Result;
 	}
