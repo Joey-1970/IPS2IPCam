@@ -15,6 +15,8 @@
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
+		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Type", 0);
 		$this->RegisterPropertyString("IPAddressInt", "127.0.0.1");
@@ -95,10 +97,7 @@
 		$arrayElements[] = array("type" => "Label", "label" => "Abfrage der Zustandsdaten in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Timer_1", "caption" => "Sekunden");
  		
- 		
-		
-		
- 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements)); 		 
+ 	return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements)); 		 
  	} 
 	
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
@@ -111,7 +110,7 @@
 		
 		$this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
 
-		If ($ParentID > 0) {
+		If (($ParentID > 0) AND (IPS_GetKernelRunlevel() == KR_READY)) {
 			If (IPS_GetProperty($ParentID, 'Port') <> $this->ReadPropertyInteger("ServerSocketPort")) {
 				IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger("ServerSocketPort"));
 			}
