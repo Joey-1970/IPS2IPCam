@@ -142,8 +142,6 @@
 			$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
 		}
 		else {
-			//SetValueString($this->GetIDForIdent("StreamMobile"), "");
-			//SetValueString($this->GetIDForIdent("StreamWebfront"), "");
 			$this->SetTimerInterval("Timer_1", 0);
 			$this->SetStatus(104);
 		}
@@ -159,6 +157,17 @@
 			$this->GetAlarmState();
 		}		
  	}
+	
+	public function MessageSink($TimeStamp, $SenderID, $Message, $Data)
+    	{
+		switch ($Message) {
+			case 10001:
+				// IPS_KERNELSTARTED
+				$this->ApplyChanges;
+				break;
+			
+		}
+    	}            
 	    
 	public function RequestAction($Ident, $Value) 
 	{
