@@ -111,6 +111,8 @@
 		$this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
 
 		If (($ParentID > 0) AND (IPS_GetKernelRunlevel() == KR_READY)) {
+			$this->RegisterMediaObject("Snapshot_".$this->InstanceID, "Snapshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Snapshot.jpg");
+			
 			If (IPS_GetProperty($ParentID, 'Port') <> $this->ReadPropertyInteger("ServerSocketPort")) {
 				IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger("ServerSocketPort"));
 			}
@@ -195,6 +197,27 @@
 	}
 	    
 	// Beginn der Funktionen
+	public function GetScreenshot()
+	{
+		If ($this->ReadPropertyBoolean("Open") == true) {
+			$IPAddress = $this->ReadPropertyString("IPAddressEx");
+			$Port = $this->ReadPropertyInteger("PortEx");
+			$User = $this->ReadPropertyString("User");
+			$Password = $this->ReadPropertyString("Password");
+			$Type = $this->ReadPropertyInteger("Type");
+			If ($Type == 0) {
+				
+			}
+			elseif ($Type == 1) {
+				$Content = file_get_contents("http://".$IPAddress.":".$Port."/tmpfs/snap.jpg?usr=".$User."&pwd=".$Password);
+				IPS_SetMediaContent($this->GetIDForIdent("Snapshot_".$this->InstanceID), base64_encode($Content));  //Bild Base64 codieren und ablegen
+				IPS_SendMediaEvent($this->GetIDForIdent("Snapshot_".$this->InstanceID)); //aktualisieren
+			}
+		}
+	} 
+	    
+	    
+	    
 	public function SetStreamData()
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
@@ -401,7 +424,27 @@
 		$Status = (IPS_GetInstance($this->GetParentID())['InstanceStatus']);  
 	return $Status;
 	}    
-	    
+	
+	private function RegisterMediaObject($Name, $Ident, $Typ, $Parent, $Position, $Cached, $Filename)
+	{
+		$MediaID = @$this->GetIDForIdent($Ident);
+		if($MediaID === false) {
+		    	$MediaID = 0;
+		}
+		
+		if ($MediaID == 0) {
+			 // Image im MedienPool anlegen
+			$MediaID = IPS_CreateMedia($Typ); 
+			// Medienobjekt einsortieren unter Kategorie $catid
+			IPS_SetParent($MediaID, $Parent);
+			IPS_SetIdent($MediaID, $Ident);
+			IPS_SetName($MediaID, $Name);
+			IPS_SetPosition($MediaID, $Position);
+                    	IPS_SetMediaCached($MediaID, $Cached);
+			$ImageFile = IPS_GetKernelDir()."media".DIRECTORY_SEPARATOR.$Filename;  // Image-Datei
+			IPS_SetMediaFile($MediaID, $ImageFile, false);    // Image im MedienPool mit Image-Datei verbinden
+		}  
+	}     
 	    
 	protected function HasActiveParent()
     	{
