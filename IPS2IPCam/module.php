@@ -111,7 +111,7 @@
 		$this->RegisterMessage($ParentID, 10505); // Status hat sich geändert
 
 		If (($ParentID > 0) AND (IPS_GetKernelRunlevel() == KR_READY)) {
-			$this->RegisterMediaObject("Snapshot_".$this->InstanceID, "Snapshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Snapshot.jpg");
+			//$this->RegisterMediaObject("Snapshot_".$this->InstanceID, "Snapshot_".$this->InstanceID, 1, $this->InstanceID, 1000, true, "Snapshot.jpg");
 			
 			If (IPS_GetProperty($ParentID, 'Port') <> $this->ReadPropertyInteger("ServerSocketPort")) {
 				IPS_SetProperty($ParentID, 'Port', $this->ReadPropertyInteger("ServerSocketPort"));
@@ -210,7 +210,7 @@
 			}
 			elseif ($Type == 1) {
 				$Content = file_get_contents("http://".$IPAddress.":".$Port."/tmpfs/snap.jpg?usr=".$User."&pwd=".$Password);
-				$MediaID = IPS_CreateMedia(1); //Bild hochladen
+				$MediaID = IPS_CreateMedia(1); 
 				IPS_SetMediaFile($MediaID, $Filename.".jpg", false);
 				IPS_SetMediaContent($MediaID, base64_encode($Content));		
 				
