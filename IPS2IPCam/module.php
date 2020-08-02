@@ -81,20 +81,20 @@
 		$arrayOptions[] = array("label" => "1080p", "value" => 2);
 		$arrayElements[] = array("type" => "Select", "name" => "Type", "caption" => "Kamera Typ", "options" => $arrayOptions );
 
-		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam intern:");
+		$arrayElements[] = array("type" => "Label", "caption" => "Zugriffsdaten IP Cam intern:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddressInt", "caption" => "IP");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PortInt", "caption" => "Port:");
-		$arrayElements[] = array("type" => "Label", "label" => "Zugriffsdaten IP Cam extern:");
+		$arrayElements[] = array("type" => "Label", "caption" => "Zugriffsdaten IP Cam extern:");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "IPAddressEx", "caption" => "IP");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "PortEx", "caption" => "Port:");
 		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "ValidationTextBox", "name" => "User", "caption" => "User");
 		$arrayElements[] = array("type" => "PasswordTextBox", "name" => "Password", "caption" => "Password");
-		$arrayElements[] = array("type" => "Label", "label" => "Port auf dem Bewegungserkennungen gesendet werden:");
+		$arrayElements[] = array("type" => "Label", "caption" => "Port auf dem Bewegungserkennungen gesendet werden:");
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ServerSocketPort", "caption" => "Port:");
-		$arrayElements[] = array("type" => "Label", "label" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Movable", "caption" => "Steuerbar"); 
-		$arrayElements[] = array("type" => "Label", "label" => "Abfrage der Zustandsdaten in Sekunden (0 -> aus, 1 sek -> Minimum)");
+		$arrayElements[] = array("type" => "Label", "caption" => "Abfrage der Zustandsdaten in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Timer_1", "caption" => "Sekunden");
  		
  	return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements)); 		 
