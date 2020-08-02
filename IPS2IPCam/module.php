@@ -197,7 +197,7 @@
 	}
 	    
 	// Beginn der Funktionen
-	public function GetScreenshot()
+	public function GetSnapshot(string $Filename)
 	{
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddressEx");
@@ -210,8 +210,12 @@
 			}
 			elseif ($Type == 1) {
 				$Content = file_get_contents("http://".$IPAddress.":".$Port."/tmpfs/snap.jpg?usr=".$User."&pwd=".$Password);
-				IPS_SetMediaContent($this->GetIDForIdent("Snapshot_".$this->InstanceID), base64_encode($Content));  //Bild Base64 codieren und ablegen
-				IPS_SendMediaEvent($this->GetIDForIdent("Snapshot_".$this->InstanceID)); //aktualisieren
+				$MediaID = IPS_CreateMedia(1); //Bild hochladen
+				IPS_SetMediaFile($MediaID, $Filename.".jpg", false);
+				IPS_SetMediaContent($MediaID, base64_encode($Content));		
+				
+				//IPS_SetMediaContent($this->GetIDForIdent("Snapshot_".$this->InstanceID), base64_encode($Content));  //Bild Base64 codieren und ablegen
+				//IPS_SendMediaEvent($this->GetIDForIdent("Snapshot_".$this->InstanceID)); //aktualisieren
 			}
 		}
 	} 
