@@ -3,19 +3,13 @@
     class IPS2IPCam extends IPSModule 
     {
 	// https://wiki.instar.de/Erweitert/CGI_Befehle/VGA_Serie_CGI_Befehle/
-	public function Destroy() 
-	{
-		//Never delete this line!
-		parent::Destroy();
-		$this->SetTimerInterval("Timer_1", 0);
-	}
-	    
+	
 	// Überschreibt die interne IPS_Create($id) Funktion
         public function Create() 
         {
             	// Diese Zeile nicht löschen.
             	parent::Create();
-		$this->RegisterMessage(0, IPS_KERNELMESSAGE);
+		$this->RegisterMessage(0, IPS_KERNELSTARTED);
 		
             	$this->RegisterPropertyBoolean("Open", false);
 		$this->RegisterPropertyInteger("Type", 0);
