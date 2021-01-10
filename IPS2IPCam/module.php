@@ -21,6 +21,7 @@
 	    	$this->RegisterPropertyString("Password", "Passwort");
 		$this->RegisterPropertyInteger("ServerSocketPort", 0);
 		$this->RegisterPropertyBoolean("Movable", false);
+		$this->RegisterPropertyInteger("CategoryForSnapshot", 0);
 		$this->RegisterPropertyInteger("Timer_1", 60); // Zustandsdaten einlesen
 		$this->RegisterTimer("Timer_1", 0, 'IPS2IPCam_GetState($_IPS["TARGET"]);');
 		
@@ -88,6 +89,9 @@
 		$arrayElements[] = array("type" => "NumberSpinner", "name" => "ServerSocketPort", "caption" => "Port:");
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "CheckBox", "name" => "Movable", "caption" => "Steuerbar"); 
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
+		$arrayElements[] = array("type" => "SelectCategory", "name" => "CategoryForSnapshot", "caption" => "Zielkategorie für Snapshots");
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "caption" => "Abfrage der Zustandsdaten in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Timer_1", "caption" => "Sekunden");
  		
@@ -193,25 +197,30 @@
 	// Beginn der Funktionen
 	public function GetSnapshot(string $Filename)
 	{
+		$Result = false;
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			$IPAddress = $this->ReadPropertyString("IPAddressEx");
 			$Port = $this->ReadPropertyInteger("PortEx");
 			$User = $this->ReadPropertyString("User");
 			$Password = $this->ReadPropertyString("Password");
 			$Type = $this->ReadPropertyInteger("Type");
+			$CategoryForSnapshot = $this->ReadPropertyInteger("CategoryForSnapshot");
 			If ($Type == 0) {
 				
 			}
 			elseif ($Type == 1) {
 				$Content = file_get_contents("http://".$IPAddress.":".$Port."/tmpfs/snap.jpg?usr=".$User."&pwd=".$Password);
 				$MediaID = IPS_CreateMedia(1); 
+				$Result = $MediaID;
 				IPS_SetMediaFile($MediaID, $Filename.".jpg", false);
 				IPS_SetMediaContent($MediaID, base64_encode($Content));		
-				
+				IPS_SetParent($MediaID, $CategoryForSnapshot);
+				IPS_SetName($MediaID, $Filename);
 				//IPS_SetMediaContent($this->GetIDForIdent("Snapshot_".$this->InstanceID), base64_encode($Content));  //Bild Base64 codieren und ablegen
 				//IPS_SendMediaEvent($this->GetIDForIdent("Snapshot_".$this->InstanceID)); //aktualisieren
 			}
 		}
+	return $Result;
 	} 
 	    
 	    
