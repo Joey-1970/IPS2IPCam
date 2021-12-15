@@ -137,13 +137,17 @@
 					
 		If ($this->ReadPropertyBoolean("Open") == true) {
 			//$this->SetStreamData();
-			$this->SetStatus(102);
+			If ($this->GetStatus() <> 102) {
+				$this->SetStatus(102);
+			}
 			$this->GetState();
 			$this->SetTimerInterval("Timer_1", ($this->ReadPropertyInteger("Timer_1") * 1000));
 		}
 		else {
 			$this->SetTimerInterval("Timer_1", 0);
-			$this->SetStatus(104);
+			If ($this->GetStatus() <> 104) {
+				$this->SetStatus(104);
+			}
 		}
 		
 	}
@@ -269,7 +273,9 @@
 
 				If ($Lines === false) {
 					$this->SendDebug("GetState", "Es ist ein Fehler aufgetreten!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 					$Result = false;
 				}
 				else {
@@ -292,7 +298,9 @@
 							}
 						}
 					}
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 					$Result = true;
 				}
 			}
@@ -316,7 +324,9 @@
 
 				If ($Lines === false) {
 					$this->SendDebug("GetAlarmState", "Es ist ein Fehler aufgetreten!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 					$Result = false;
 				}
 				else {
@@ -334,7 +344,9 @@
 							}
 						}
 					}
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 					$Result = true;
 				}
 			}
@@ -363,11 +375,15 @@
 				$Result = file_get_contents('http://'.$IPAddress.':'.$Port.'/set_alarm.cgi?motion_armed='.$MotionDetection.'&mail='.$Notification.'&motion_sensitivity='.$MotionSensibility.'&motion_compensation=1&user='.$User.'&pwd='.$Password);
 				If ($Result === false) {
 					$this->SendDebug("SetState", "Es ist ein Fehler aufgetreten!", 0);
-					$this->SetStatus(202);
+					If ($this->GetStatus() <> 202) {
+						$this->SetStatus(202);
+					}
 					$Result = false;
 				}
 				else {
-					$this->SetStatus(102);
+					If ($this->GetStatus() <> 102) {
+						$this->SetStatus(102);
+					}
 					$Result = true;
 					$this->GetState();
 				}
@@ -392,11 +408,15 @@
 			$Result = file_get_contents('http://'.$IPAddress.':'.$Port.'/decoder_control.cgi?command='.$DirectionArray[$Direction].'&onestep=1&user='.$User.'&pwd='.$Password);
 			If ($Result === false) {
 				$this->SendDebug("Move", "Es ist ein Fehler aufgetreten!", 0);
-				$this->SetStatus(202);
+				If ($this->GetStatus() <> 202) {
+					$this->SetStatus(202);
+				}
 				$Result = false;
 			}
 			else {
-				$this->SetStatus(102);
+				If ($this->GetStatus() <> 102) {
+					$this->SetStatus(102);
+				}
 				$Result = true;
 			}
 		}
