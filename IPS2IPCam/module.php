@@ -94,8 +94,13 @@
 		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");
 		$arrayElements[] = array("type" => "Label", "caption" => "Abfrage der Zustandsdaten in Sekunden (0 -> aus, 1 sek -> Minimum)");
 		$arrayElements[] = array("type" => "IntervalBox", "name" => "Timer_1", "caption" => "Sekunden");
- 		
- 	return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements)); 		 
+		$arrayElements[] = array("type" => "Label", "caption" => "_____________________________________________________________________________________________________");		
+		
+		$arrayActions = array(); 
+		$arrayActions[] = array("type" => "Label", "caption" => "Test Center"); 
+		$arrayActions[] = array("type" => "TestCenter", "name" => "TestCenter");
+		
+ 		return JSON_encode(array("status" => $arrayStatus, "elements" => $arrayElements, "actions" => $arrayActions)); 		
  	} 
 	
 	// Überschreibt die intere IPS_ApplyChanges($id) Funktion
